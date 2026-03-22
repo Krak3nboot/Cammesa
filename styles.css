@@ -93,7 +93,7 @@ h1 {
 
 .controls {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 16px;
   padding: 18px;
   margin-bottom: 22px;
@@ -119,7 +119,7 @@ h1 {
 
 .kpis {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 16px;
   margin-bottom: 22px;
 }
@@ -231,4 +231,10 @@ canvas {
   .chart-wide {
     grid-column: auto;
   }
+}
+
+
+#kpiLastDayMachine {
+  font-size: clamp(18px, 2vw, 26px);
+  overflow-wrap: anywhere;
 }

@@ -4,6 +4,7 @@ Este proyecto es una web estática en JavaScript lista para desplegar en Vercel.
 
 ## Qué incluye
 
+- KPI adicional: máximo del último día con máquina y rango horario
 - Evolución mensual del costo marginal operado
 - Serie diaria
 - Promedio por hora

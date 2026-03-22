@@ -15,6 +15,10 @@ const els = {
   kpiMaxDate: document.getElementById("kpiMaxDate"),
   kpiMin: document.getElementById("kpiMin"),
   kpiMinDate: document.getElementById("kpiMinDate"),
+  kpiLastDayPeak: document.getElementById("kpiLastDayPeak"),
+  kpiLastDayPeakDate: document.getElementById("kpiLastDayPeakDate"),
+  kpiLastDayMachine: document.getElementById("kpiLastDayMachine"),
+  kpiLastDayMachineMeta: document.getElementById("kpiLastDayMachineMeta"),
   recentMonthsBody: document.getElementById("recentMonthsBody"),
 };
 
@@ -49,6 +53,17 @@ function formatMonth(isoDate) {
 function formatLongDate(isoDate) {
   const date = new Date(`${isoDate}T00:00:00`);
   return date.toLocaleDateString("es-AR", { day: "2-digit", month: "2-digit", year: "numeric" });
+}
+
+function formatHour(hour) {
+  if (hour == null || Number.isNaN(hour)) return "-";
+  return `${String(hour).padStart(2, "0")}:00`;
+}
+
+function getLastDayPeak() {
+  if (!data.lastDayPeak) return null;
+  if (state.year === "all") return data.lastDayPeak;
+  return String(data.lastDayPeak.year) === String(state.year) ? data.lastDayPeak : null;
 }
 
 function fillYearFilter() {
@@ -112,6 +127,27 @@ function updateKPIs() {
   els.kpiMaxDate.textContent = formatMonth(maxItem.period);
   els.kpiMin.textContent = formatValue(minItem[state.metric], state.metric);
   els.kpiMinDate.textContent = formatMonth(minItem.period);
+
+  const lastDayPeak = getLastDayPeak();
+  if (lastDayPeak) {
+    const hourLabel = lastDayPeak.hourFrom != null && lastDayPeak.hourTo != null
+      ? (lastDayPeak.hourFrom === lastDayPeak.hourTo
+          ? formatHour(lastDayPeak.hourFrom)
+          : `${formatHour(lastDayPeak.hourFrom)} a ${formatHour(lastDayPeak.hourTo)}`)
+      : "-";
+
+    els.kpiLastDayPeak.textContent = formatValue(lastDayPeak[state.metric], state.metric);
+    els.kpiLastDayPeakDate.textContent = `${formatLongDate(lastDayPeak.date)} · ${hourLabel}`;
+    els.kpiLastDayMachine.textContent = lastDayPeak.machine || "-";
+    els.kpiLastDayMachineMeta.textContent = lastDayPeak.agent
+      ? `${lastDayPeak.agent} · ${hourLabel}`
+      : hourLabel;
+  } else {
+    els.kpiLastDayPeak.textContent = "-";
+    els.kpiLastDayPeakDate.textContent = "Sin datos para el año seleccionado";
+    els.kpiLastDayMachine.textContent = "-";
+    els.kpiLastDayMachineMeta.textContent = "Sin datos para el año seleccionado";
+  }
 }
 
 function renderRecentMonthsTable() {
